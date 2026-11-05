@@ -1,0 +1,2276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statistics Quiz — Master Statistics Interactively</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================
+       THEME VARIABLES (LIGHT & DARK MODE)
+       ========================================================== */
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --primary-border: #c7d2fe;
+      
+      --easy-color: #059669;
+      --easy-bg: #ecfdf5;
+      --easy-border: #a7f3d0;
+
+      --med-color: #d97706;
+      --med-bg: #fffbeb;
+      --med-border: #fde68a;
+
+      --hard-color: #dc2626;
+      --hard-bg: #fef2f2;
+      --hard-border: #fecaca;
+
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --error: #ef4444;
+      --error-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+
+      --bg-page: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+      --card-bg: #ffffff;
+      --card-border: rgba(226, 232, 240, 0.9);
+      --nav-bg: rgba(255, 255, 255, 0.9);
+      --nav-border: #e2e8f0;
+
+      --text-main: #0f172a;
+      --text-sub: #334155;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+
+      --item-bg: #f8fafc;
+      --item-border: #e2e8f0;
+      --item-hover: #f1f5f9;
+
+      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 24px -4px rgba(15, 23, 42, 0.08);
+      --shadow-xl: 0 20px 30px -6px rgba(79, 70, 229, 0.16);
+    }
+
+    [data-theme="dark"] {
+      --bg-page: linear-gradient(135deg, #0b0f19 0%, #111827 100%);
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --nav-bg: rgba(30, 41, 59, 0.9);
+      --nav-border: #334155;
+
+      --text-main: #f8fafc;
+      --text-sub: #cbd5e1;
+      --text-muted: #94a3b8;
+      --text-light: #64748b;
+
+      --item-bg: #0f172a;
+      --item-border: #334155;
+      --item-hover: #1e293b;
+
+      --primary-light: rgba(79, 70, 229, 0.2);
+      --primary-border: #4f46e5;
+      --easy-bg: rgba(5, 150, 105, 0.15);
+      --med-bg: rgba(217, 119, 6, 0.15);
+      --hard-bg: rgba(220, 38, 38, 0.15);
+      --success-light: rgba(16, 185, 129, 0.2);
+      --error-light: rgba(239, 68, 68, 0.2);
+      --warning-light: rgba(245, 158, 11, 0.2);
+      --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==========================================================
+       NAVIGATION & TOP BAR
+       ========================================================== */
+    .navbar {
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--nav-border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 0.85rem 1.5rem;
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--text-main);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      background: var(--item-bg);
+      color: var(--text-sub);
+      border: 1px solid var(--item-border);
+      cursor: pointer;
+    }
+    .btn-nav:hover, .btn-nav.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary-border);
+    }
+
+    .btn-icon-toggle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
+      color: var(--text-sub);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+    .btn-icon-toggle:hover {
+      color: var(--primary);
+      border-color: var(--primary-border);
+    }
+
+    /* ==========================================================
+       MAIN LAYOUT
+       ========================================================== */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+    }
+
+    .quiz-app-container {
+      width: 100%;
+      max-width: 860px;
+    }
+
+    .view-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 2.25rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--card-border);
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================
+       COMMON BUTTONS & PILLS
+       ========================================================== */
+    .btn-primary {
+      padding: 0.95rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: var(--shadow-xl);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      padding: 0.85rem 1.4rem;
+      background: var(--item-bg);
+      color: var(--text-main);
+      border: 1px solid var(--item-border);
+      border-radius: var(--radius-md);
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-secondary:hover {
+      background: var(--item-hover);
+      border-color: var(--slate-300);
+    }
+
+    /* ==========================================================
+       VIEW: START & SETTINGS
+       ========================================================== */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.85rem;
+    }
+
+    .hero-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 0.85rem;
+    }
+
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.75rem;
+      line-height: 1.6;
+    }
+
+    /* Mode Selector (Standard vs Practice) */
+    .mode-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .mode-card {
+      border: 2px solid var(--item-border);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      background: var(--item-bg);
+      cursor: pointer;
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-start;
+    }
+    .mode-card.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .mode-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--card-bg);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border: 1px solid var(--item-border);
+    }
+    .mode-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-main);
+      margin-bottom: 0.2rem;
+    }
+    .mode-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Difficulty Selection */
+    .section-label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .difficulty-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .diff-card {
+      border: 2px solid var(--item-border);
+      border-radius: var(--radius-md);
+      padding: 1.15rem 1rem;
+      cursor: pointer;
+      background: var(--item-bg);
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      position: relative;
+    }
+    .diff-card:hover {
+      border-color: var(--slate-400);
+      transform: translateY(-2px);
+    }
+    .diff-card.selected {
+      background: var(--card-bg);
+      transform: translateY(-2px);
+    }
+    .diff-card.selected[data-level="easy"] { border-color: var(--easy-color); }
+    .diff-card.selected[data-level="medium"] { border-color: var(--med-color); }
+    .diff-card.selected[data-level="hard"] { border-color: var(--hard-color); }
+
+    .diff-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+    .diff-card[data-level="easy"] .diff-badge { background: var(--easy-bg); color: var(--easy-color); }
+    .diff-card[data-level="medium"] .diff-badge { background: var(--med-bg); color: var(--med-color); }
+    .diff-card[data-level="hard"] .diff-badge { background: var(--hard-bg); color: var(--hard-color); }
+
+    .diff-name { font-size: 1.05rem; font-weight: 700; color: var(--text-main); }
+    .diff-info { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
+    
+    .diff-stats {
+      font-size: 0.76rem;
+      color: var(--text-light);
+      margin-top: auto;
+      padding-top: 0.4rem;
+      border-top: 1px dashed var(--item-border);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Config / Settings Drawer inside Start View */
+    .settings-box {
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .setting-group label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .setting-select {
+      background: var(--card-bg);
+      border: 1px solid var(--item-border);
+      color: var(--text-main);
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    /* ==========================================================
+       VIEW: ACTIVE QUIZ & PRACTICE
+       ========================================================== */
+    .quiz-meta-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .quiz-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .q-pill {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .q-pill.easy { background: var(--easy-bg); color: var(--easy-color); }
+    .q-pill.medium { background: var(--med-bg); color: var(--med-color); }
+    .q-pill.hard { background: var(--hard-bg); color: var(--hard-color); }
+    .q-pill.practice { background: var(--warning-light); color: var(--warning); }
+
+    .timer-pill {
+      display: none;
+      align-items: center;
+      gap: 0.3rem;
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--primary);
+    }
+    .timer-pill.urgent {
+      background: var(--error-light);
+      color: var(--error);
+      border-color: var(--error);
+    }
+
+    .q-stats {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .q-score-counter {
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--item-border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, #3b82f6 100%);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .question-topic {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+    }
+
+    .question-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.45;
+      margin-bottom: 1.5rem;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .option-btn {
+      width: 100%;
+      padding: 0.95rem 1.15rem;
+      background: var(--item-bg);
+      border: 2px solid var(--item-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-align: left;
+      cursor: pointer;
+      color: var(--text-main);
+    }
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: var(--card-bg);
+      transform: translateX(4px);
+    }
+    .option-btn.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .option-btn.correct {
+      border-color: var(--success) !important;
+      background: var(--success-light) !important;
+      color: #065f46;
+    }
+    .option-btn.incorrect {
+      border-color: var(--error) !important;
+      background: var(--error-light) !important;
+      color: #991b1b;
+    }
+
+    .option-prefix {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--item-border);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .option-btn.selected .option-prefix { background: var(--primary); color: white; border-color: var(--primary); }
+    .option-btn.correct .option-prefix { background: var(--success); color: white; border-color: var(--success); }
+    .option-btn.incorrect .option-prefix { background: var(--error); color: white; border-color: var(--error); }
+
+    .option-text {
+      font-size: 0.96rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    /* Practice Mode Hints & Diagnostic Box */
+    .hint-box {
+      display: none;
+      background: var(--warning-light);
+      border-left: 4px solid var(--warning);
+      padding: 0.9rem 1.15rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 1.25rem;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+
+    .mistake-box {
+      display: none;
+      background: var(--error-light);
+      border-left: 4px solid var(--error);
+      padding: 0.9rem 1.15rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 1.25rem;
+      font-size: 0.9rem;
+      color: #991b1b;
+    }
+
+    .explanation-box {
+      display: none;
+      background: var(--item-bg);
+      border-left: 4px solid var(--primary);
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.92rem;
+      color: var(--text-sub);
+    }
+    .explanation-box strong { color: var(--primary); display: block; margin-bottom: 0.25rem; }
+
+    .quiz-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* ==========================================================
+       VIEW: LEARN STATISTICS (STUDY SECTION)
+       ========================================================== */
+    .learn-header {
+      margin-bottom: 2rem;
+    }
+    .learn-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .learn-topic-card {
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+    }
+    .learn-topic-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .learn-formula-box {
+      background: var(--card-bg);
+      border: 1px dashed var(--item-border);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      color: var(--primary);
+      margin: 0.75rem 0;
+    }
+    .learn-example {
+      background: var(--card-bg);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      border: 1px solid var(--item-border);
+    }
+    .learn-example strong { color: var(--easy-color); }
+
+    /* ==========================================================
+       VIEW: QUESTION MANAGEMENT
+       ========================================================== */
+    .qm-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .qm-filters {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .qm-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+    }
+    .qm-item {
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.15rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .qm-item-info {
+      flex: 1;
+    }
+    .qm-item-q {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      margin: 0.25rem 0;
+    }
+    .qm-item-ans {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .qm-item-actions {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .btn-icon-action {
+      padding: 0.4rem 0.65rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--item-border);
+      background: var(--card-bg);
+      color: var(--text-sub);
+      cursor: pointer;
+    }
+    .btn-icon-action.delete {
+      color: var(--error);
+    }
+    .btn-icon-action:hover {
+      background: var(--item-hover);
+    }
+
+    /* Modal for Add / Edit */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      width: 100%;
+      max-width: 620px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--card-border);
+    }
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      text-transform: uppercase;
+    }
+    .form-input, .form-textarea, .form-select {
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.85rem;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      font-family: inherit;
+    }
+    .form-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    /* ==========================================================
+       VIEW: QUIZ HISTORY & RESULTS
+       ========================================================== */
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+    .history-table th, .history-table td {
+      padding: 0.75rem 0.85rem;
+      text-align: left;
+      border-bottom: 1px solid var(--item-border);
+    }
+    .history-table th {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .results-center {
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--item-bg);
+      border: 4px solid var(--primary);
+      font-family: var(--font-mono);
+    }
+    .score-circle .pct { font-size: 2rem; font-weight: 800; color: var(--text-main); }
+    .score-circle .lbl { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+
+    .results-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+    .res-stat-card {
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 0.5rem;
+      text-align: center;
+    }
+    .res-stat-val { font-size: 1.3rem; font-weight: 800; color: var(--text-main); font-family: var(--font-mono); }
+    .res-stat-lbl { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+
+    .review-wrapper {
+      margin-top: 2rem;
+      border-top: 1px solid var(--item-border);
+      padding-top: 1.5rem;
+      display: none;
+    }
+    .review-wrapper.show { display: block; }
+    .review-item {
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-bottom: 0.85rem;
+      text-align: left;
+    }
+    .review-item.correct { border-left: 4px solid var(--success); }
+    .review-item.incorrect { border-left: 4px solid var(--error); }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--nav-border);
+      background: var(--nav-bg);
+    }
+
+    @media (max-width: 640px) {
+      .difficulty-grid, .mode-selector, .settings-box, .results-stats-grid, .form-options-grid {
+        grid-template-columns: 1fr;
+      }
+      .view-card { padding: 1.5rem 1rem; }
+      .hero-title { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================
+       NAVBAR
+       ========================================================== -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo" onclick="switchView('start')">
+        <div class="logo-badge">σ</div>
+        <span>Statistics Quiz</span>
+      </div>
+      <div class="nav-links">
+        <button class="btn-nav" id="navLearn" onclick="switchView('learn')">
+          📖 Learn
+        </button>
+        <button class="btn-nav" id="navManage" onclick="switchView('manage')">
+          ⚙️ Questions
+        </button>
+        <button class="btn-nav" id="navHistory" onclick="switchView('history')">
+          📊 History
+        </button>
+        <button class="btn-icon-toggle" id="btnTheme" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+          🌓
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================
+       MAIN CONTENT CONTAINER
+       ========================================================== -->
+  <main>
+    <div class="quiz-app-container">
+
+      <!-- ==========================================
+           1. START VIEW
+           ========================================== -->
+      <section class="view-card" id="startView">
+        <div class="hero-badge">Interactive Educational Suite</div>
+        <h1 class="hero-title">Test Your <span>Statistics</span> Skills</h1>
+        <p class="hero-subtitle">Interactive tests, detailed explanations, and guided practice.</p>
+        <p class="hero-desc">
+          Choose between standard timed assessments or untimed practice with step-by-step hints and mistake diagnostics.
+        </p>
+
+        <!-- Mode Selection -->
+        <div class="section-label">Select Learning Mode:</div>
+        <div class="mode-selector">
+          <div class="mode-card selected" id="modeStandard" onclick="selectQuizMode('standard')">
+            <div class="mode-icon">🎯</div>
+            <div>
+              <div class="mode-title">Standard Quiz</div>
+              <div class="mode-desc">Timed or untimed assessment with score tracking and performance history.</div>
+            </div>
+          </div>
+          <div class="mode-card" id="modePractice" onclick="selectQuizMode('practice')">
+            <div class="mode-icon">💡</div>
+            <div>
+              <div class="mode-title">Practice Mode</div>
+              <div class="mode-desc">Includes hints before answering, mistake breakdowns, and question retries.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Difficulty Selection -->
+        <div class="section-label">
+          <span>Select Difficulty Level:</span>
+          <span id="bestScoreLabel" style="font-size: 0.8rem; color: var(--primary);">Best: --</span>
+        </div>
+        <div class="difficulty-grid">
+          <div class="diff-card selected" data-level="easy" onclick="selectDifficulty('easy')">
+            <span class="diff-badge">Level 1</span>
+            <div class="diff-name">Easy</div>
+            <div class="diff-info">Mean, median, mode, range, and simple chart readings.</div>
+            <div class="diff-stats" id="easyStats">10 Questions</div>
+          </div>
+          <div class="diff-card" data-level="medium" onclick="selectDifficulty('medium')">
+            <span class="diff-badge">Level 2</span>
+            <div class="diff-name">Medium</div>
+            <div class="diff-info">Frequency tables, pie charts, weighted averages, and IQR.</div>
+            <div class="diff-stats" id="medStats">10 Questions</div>
+          </div>
+          <div class="diff-card" data-level="hard" onclick="selectDifficulty('hard')">
+            <span class="diff-badge">Level 3</span>
+            <div class="diff-name">Hard</div>
+            <div class="diff-info">Sample & population variance, standard deviation, and scaling.</div>
+            <div class="diff-stats" id="hardStats">10 Questions</div>
+          </div>
+        </div>
+
+        <!-- Quiz Settings Box -->
+        <div class="section-label">Quiz Settings:</div>
+        <div class="settings-box">
+          <div class="setting-group">
+            <label for="settingCount">Questions</label>
+            <select class="setting-select" id="settingCount">
+              <option value="5">5 Questions</option>
+              <option value="10" selected>10 Questions</option>
+              <option value="all">All Available</option>
+            </select>
+          </div>
+          <div class="setting-group">
+            <label for="settingTimer">Timer</label>
+            <select class="setting-select" id="settingTimer">
+              <option value="0" selected>No Timer</option>
+              <option value="30">30s / Question</option>
+              <option value="60">60s / Question</option>
+              <option value="180">3 Min Total</option>
+            </select>
+          </div>
+          <div class="setting-group">
+            <label for="settingShuffle">Shuffle Order</label>
+            <select class="setting-select" id="settingShuffle">
+              <option value="true" selected>Yes, Randomize</option>
+              <option value="false">Original Order</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="width: 100%;" onclick="startQuiz()">
+          Start Quiz Now →
+        </button>
+      </section>
+
+      <!-- ==========================================
+           2. ACTIVE QUIZ & PRACTICE VIEW
+           ========================================== -->
+      <section class="view-card" id="quizView" style="display: none;">
+        <div class="quiz-meta-bar">
+          <div class="quiz-badges">
+            <span class="q-pill" id="qBadgeLevel">EASY</span>
+            <span class="q-pill practice" id="qBadgePractice" style="display: none;">PRACTICE MODE</span>
+            <div class="timer-pill" id="timerDisplay">
+              <span>⏱️</span>
+              <span id="timerText">00:30</span>
+            </div>
+          </div>
+          <div class="q-stats">
+            <span id="qProgressText">Question 1 of 10</span>
+            <span class="q-score-counter" id="qScoreDisplay">Score: 0</span>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <div class="question-topic" id="qTopic">Topic: Central Tendency</div>
+        <h2 class="question-text" id="qText">Question text goes here?</h2>
+
+        <div class="options-grid" id="optionsContainer">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Practice Mode Hint Container -->
+        <div class="hint-box" id="hintBox"></div>
+
+        <!-- Mistake Diagnosis Box -->
+        <div class="mistake-box" id="mistakeBox"></div>
+
+        <!-- Explanation Box -->
+        <div class="explanation-box" id="explanationBox">
+          <strong>Step-by-Step Explanation</strong>
+          <p id="explanationText"></p>
+        </div>
+
+        <div class="quiz-actions">
+          <div>
+            <button class="btn-secondary" id="btnHint" onclick="showHint()" style="display: none;">
+              💡 Show Hint
+            </button>
+            <button class="btn-secondary" id="btnRetry" onclick="retryQuestion()" style="display: none;">
+              🔄 Try Again
+            </button>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn-primary" id="btnCheck" onclick="checkAnswer()" disabled>
+              Check Answer
+            </button>
+            <button class="btn-primary" id="btnNext" onclick="nextQuestion()" style="display: none;">
+              Next Question →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           3. FINAL RESULTS VIEW
+           ========================================== -->
+      <section class="view-card" id="resultsView" style="display: none;">
+        <div class="results-center">
+          <div class="score-circle">
+            <span class="pct" id="resPercent">80%</span>
+            <span class="lbl">Accuracy</span>
+          </div>
+          <h2 class="hero-title" id="resTitle" style="font-size: 1.85rem;">Great Effort!</h2>
+          <p class="hero-desc" id="resDesc" style="max-width: 500px; margin: 0 auto 1.5rem;"></p>
+
+          <div class="results-stats-grid">
+            <div class="res-stat-card">
+              <div class="res-stat-val" id="resCorrect">8</div>
+              <div class="res-stat-lbl">Correct</div>
+            </div>
+            <div class="res-stat-card">
+              <div class="res-stat-val" id="resIncorrect">2</div>
+              <div class="res-stat-lbl">Incorrect</div>
+            </div>
+            <div class="res-stat-card">
+              <div class="res-stat-val" id="resTime">1m 45s</div>
+              <div class="res-stat-lbl">Time Taken</div>
+            </div>
+            <div class="res-stat-card">
+              <div class="res-stat-val" id="resBest">90%</div>
+              <div class="res-stat-lbl">Personal Best</div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+            <button class="btn-primary" onclick="restartQuiz()">🔄 Retake Quiz</button>
+            <button class="btn-secondary" onclick="toggleReview()">🔍 Review Answers</button>
+            <button class="btn-secondary" onclick="switchView('start')">🏠 Back to Home</button>
+          </div>
+
+          <!-- Review Accordion -->
+          <div class="review-wrapper" id="reviewWrapper">
+            <h3 style="margin-bottom: 1rem; text-align: left;">Detailed Question Breakdown</h3>
+            <div id="reviewContainer"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           4. LEARN STATISTICS (LESSONS) VIEW
+           ========================================== -->
+      <section class="view-card" id="learnView" style="display: none;">
+        <div class="learn-header">
+          <div class="hero-badge">Student-Friendly Study Guide</div>
+          <h2 class="hero-title">Essential <span>Statistics</span> Concepts</h2>
+          <p class="hero-desc">Review standard definitions, student-friendly formulas, and step-by-step examples before testing your skills.</p>
+          <button class="btn-secondary" onclick="switchView('start')">← Back to Quiz Home</button>
+        </div>
+
+        <div class="learn-grid">
+          <!-- Mean -->
+          <div class="learn-topic-card">
+            <h3 class="learn-topic-title">1. Mean (The Arithmetic Average)</h3>
+            <p>The mean is the balance point of a dataset. It is computed by summing every value and dividing by the total count.</p>
+            <div class="learn-formula-box">$$\bar{x} = \frac{\sum x}{n} = \frac{x_1 + x_2 + \dots + x_n}{n}$$</div>
+            <div class="learn-example">
+              <strong>Worked Example:</strong> Find the mean of 6, 8, 10, 16.<br />
+              Sum = 6 + 8 + 10 + 16 = 40. Count = 4.<br />
+              Mean = 40 / 4 = 10.
+            </div>
+          </div>
+
+          <!-- Median -->
+          <div class="learn-topic-card">
+            <h3 class="learn-topic-title">2. Median (The Middle Value)</h3>
+            <p>The median is the exact center of sorted data. Unlike the mean, the median is <strong>resistant to extreme outliers</strong>.</p>
+            <div class="learn-formula-box">Position = (n + 1) / 2 &nbsp;|&nbsp; If n is even: Average of two center values</div>
+            <div class="learn-example">
+              <strong>Worked Example:</strong> Find the median of 15, 3, 9, 21, 8.<br />
+              1. Sort ascending: 3, 8, 9, 15, 21.<br />
+              2. The middle (3rd) number is <strong>9</strong>.
+            </div>
+          </div>
+
+          <!-- Mode -->
+          <div class="learn-topic-card">
+            <h3 class="learn-topic-title">3. Mode (Most Frequent)</h3>
+            <p>The mode is the observation that appears most often. A dataset can have one mode (unimodal), more than one mode (bimodal/multimodal), or no mode at all.</p>
+            <div class="learn-example">
+              <strong>Worked Example:</strong> In {4, 7, 7, 9, 10, 7, 2}, <strong>7</strong> is the mode because it appears 3 times.
+            </div>
+          </div>
+
+          <!-- Range & IQR -->
+          <div class="learn-topic-card">
+            <h3 class="learn-topic-title">4. Range & Interquartile Range (IQR)</h3>
+            <p>Measures of spread describe how far apart numbers are scattered.</p>
+            <div class="learn-formula-box">Range = Maximum - Minimum &nbsp;|&nbsp; IQR = Q3 - Q1</div>
+            <div class="learn-example">
+              <strong>Worked Example:</strong> For {2, 5, 8, 12, 19}:<br />
+              Range = 19 - 2 = <strong>17</strong>.
+            </div>
+          </div>
+
+          <!-- Frequency Tables -->
+          <div class="learn-topic-card">
+            <h3 class="learn-topic-title">5. Frequency Tables & Grouped Mean</h3>
+            <p>When data is grouped with frequencies $f$ and midpoints $m$, the mean is estimated using weighted totals:</p>
+            <div class="learn-formula-box">Grouped Mean = $\frac{\sum (f \cdot m)}{\sum f}$</div>
+            <div class="learn-example">
+              <strong>Worked Example:</strong> Score 5 (f = 2), Score 10 (f = 3).<br />
+              Sum of (f × m) = (2 × 5) + (3 × 10) = 10 + 30 = 40.<br />
+              Total f = 5. Estimated Mean = 40 / 5 = <strong>8</strong>.
+            </div>
+          </div>
+
+          <!-- Variance & Standard Deviation -->
+          <div class="learn-topic-card">
+            <h3 class="learn-topic-title">6. Variance & Standard Deviation</h3>
+            <p>Variance measures the average squared distance from the mean. Standard deviation brings this value back into the original units of measurement.</p>
+            <div class="learn-formula-box">Sample Variance: $s^2 = \frac{\sum (x - \bar{x})^2}{n - 1}$ &nbsp;|&nbsp; Standard Deviation: $s = \sqrt{s^2}$</div>
+            <div class="learn-example">
+              <strong>Sample vs. Population:</strong> Always use <strong>n - 1</strong> in the denominator when calculating sample variance (Bessel's correction) to avoid underestimating true population variability.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           5. QUESTION MANAGEMENT VIEW
+           ========================================== -->
+      <section class="view-card" id="manageView" style="display: none;">
+        <div class="qm-header">
+          <div>
+            <h2 class="hero-title" style="font-size: 1.8rem; margin: 0;">Question <span>Manager</span></h2>
+            <p class="hero-desc" style="margin: 0;">Add, modify, or delete questions stored in local memory.</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn-primary" onclick="openQuestionModal()">+ Add New Question</button>
+            <button class="btn-secondary" onclick="resetToDefaultQuestions()">↺ Reset Defaults</button>
+          </div>
+        </div>
+
+        <div class="section-label" style="margin-bottom: 0.85rem;">
+          <div class="qm-filters">
+            <button class="btn-nav active" onclick="filterQuestionList('all')">All (<span id="countAll">0</span>)</button>
+            <button class="btn-nav" onclick="filterQuestionList('easy')">Easy (<span id="countEasy">0</span>)</button>
+            <button class="btn-nav" onclick="filterQuestionList('medium')">Medium (<span id="countMed">0</span>)</button>
+            <button class="btn-nav" onclick="filterQuestionList('hard')">Hard (<span id="countHard">0</span>)</button>
+          </div>
+          <button class="btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="switchView('start')">Back to Quiz</button>
+        </div>
+
+        <div class="qm-list" id="qmQuestionsList">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- ==========================================
+           6. QUIZ HISTORY VIEW
+           ========================================== -->
+      <section class="view-card" id="historyView" style="display: none;">
+        <div class="qm-header">
+          <div>
+            <h2 class="hero-title" style="font-size: 1.8rem; margin: 0;">Your Quiz <span>History</span></h2>
+            <p class="hero-desc" style="margin: 0;">Review your past test attempts and track your progress.</p>
+          </div>
+          <button class="btn-secondary" onclick="clearQuizHistory()">Clear History</button>
+        </div>
+
+        <div id="historyTableContainer" style="overflow-x: auto;">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>Difficulty</th>
+                <th>Mode</th>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Duration</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+        <button class="btn-secondary" style="margin-top: 1.5rem;" onclick="switchView('start')">← Back to Home</button>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==========================================================
+       MODAL: ADD / EDIT QUESTION
+       ========================================================== -->
+  <div class="modal-overlay" id="questionModal">
+    <div class="modal-card">
+      <h3 style="font-size: 1.3rem; font-weight: 800;" id="modalTitle">Add New Question</h3>
+      <form class="modal-form" id="questionForm" onsubmit="saveQuestion(event)">
+        <input type="hidden" id="formQId" />
+        
+        <div class="form-group">
+          <label>Difficulty Level</label>
+          <select class="form-select" id="formQLevel" required>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Topic</label>
+          <input type="text" class="form-input" id="formQTopic" placeholder="e.g. Mean, Median and Mode" required />
+        </div>
+
+        <div class="form-group">
+          <label>Question Text</label>
+          <textarea class="form-textarea" id="formQText" rows="3" placeholder="Enter clear mathematical question..." required></textarea>
+        </div>
+
+        <div class="form-options-grid">
+          <div class="form-group">
+            <label>Option A</label>
+            <input type="text" class="form-input" id="formOptA" required />
+          </div>
+          <div class="form-group">
+            <label>Option B</label>
+            <input type="text" class="form-input" id="formOptB" required />
+          </div>
+          <div class="form-group">
+            <label>Option C</label>
+            <input type="text" class="form-input" id="formOptC" required />
+          </div>
+          <div class="form-group">
+            <label>Option D</label>
+            <input type="text" class="form-input" id="formOptD" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Correct Option</label>
+          <select class="form-select" id="formCorrectOption" required>
+            <option value="0">Option A</option>
+            <option value="1">Option B</option>
+            <option value="2">Option C</option>
+            <option value="3">Option D</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Practice Hint (For Practice Mode)</label>
+          <input type="text" class="form-input" id="formQHint" placeholder="e.g. Remember to sort data before finding median." />
+        </div>
+
+        <div class="form-group">
+          <label>Detailed Explanation</label>
+          <textarea class="form-textarea" id="formQExplanation" rows="2" placeholder="Explain the calculation step by step..." required></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
+          <button type="button" class="btn-secondary" onclick="closeQuestionModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Save Question</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Statistics Quiz &copy; Interactive Learning & Assessment Tool. All question banks stored locally.</p>
+  </footer>
+
+  <!-- ==========================================================
+       JAVASCRIPT LOGIC
+       ========================================================== -->
+  <script>
+    /* ----------------------------------------------------------
+       ORIGINAL 30 VERIFIED QUESTIONS
+       ---------------------------------------------------------- */
+    const DEFAULT_QUESTIONS = [
+      // EASY (1 - 10)
+      {
+        id: 'e1', level: 'easy', topic: 'Mean, Median and Mode',
+        question: 'The test scores of five students are 14, 18, 12, 20, and 16. What is the mean score?',
+        options: ['15.0', '16.0', '17.0', '18.0'], answer: '16.0',
+        hint: 'Sum all 5 numbers, then divide by 5.',
+        explanation: 'Mean = (14 + 18 + 12 + 20 + 16) / 5 = 80 / 5 = 16.0.'
+      },
+      {
+        id: 'e2', level: 'easy', topic: 'Mean, Median and Mode',
+        question: 'Find the median of the following dataset: 23, 7, 15, 31, 19.',
+        options: ['15', '19', '23', '19.5'], answer: '19',
+        hint: 'Order the numbers from smallest to largest first; pick the middle one.',
+        explanation: 'Ordered: 7, 15, 19, 23, 31. The middle (3rd) observation is 19.'
+      },
+      {
+        id: 'e3', level: 'easy', topic: 'Mean, Median and Mode',
+        question: 'A bookstore records the number of books bought by eight customers: 3, 5, 2, 5, 7, 5, 4, 2. What is the mode?',
+        options: ['2', '4', '5', 'No mode'], answer: '5',
+        hint: 'Find the number that appears with the highest frequency.',
+        explanation: 'The number 5 appears three times, more than any other value.'
+      },
+      {
+        id: 'e4', level: 'easy', topic: 'Range',
+        question: 'Daily high temperatures over one week are: 18°C, 24°C, 15°C, 29°C, 22°C, 19°C, 27°C. What is the range?',
+        options: ['12°C', '14°C', '15°C', '16°C'], answer: '14°C',
+        hint: 'Subtract the lowest temperature from the highest temperature.',
+        explanation: 'Range = Max - Min = 29 - 15 = 14°C.'
+      },
+      {
+        id: 'e5', level: 'easy', topic: 'Bar Charts',
+        question: 'A bar chart shows monthly car sales: Branch A sold 45 cars, Branch B sold 30, Branch C sold 60, and Branch D sold 25. How many more cars did Branch C sell than Branch B?',
+        options: ['15 cars', '25 cars', '30 cars', '35 cars'], answer: '30 cars',
+        hint: 'Subtract Branch B sales (30) from Branch C sales (60).',
+        explanation: 'Difference = 60 - 30 = 30 cars.'
+      },
+      {
+        id: 'e6', level: 'easy', topic: 'Pie Charts',
+        question: 'In a pie chart of 200 students, the sector for Basketball has a central angle of 90°. How many students chose Basketball?',
+        options: ['40 students', '50 students', '60 students', '90 students'], answer: '50 students',
+        hint: '90° is 1/4 (25%) of a 360° circle.',
+        explanation: '(90 / 360) × 200 = 0.25 × 200 = 50 students.'
+      },
+      {
+        id: 'e7', level: 'easy', topic: 'Frequency Tables',
+        question: 'A survey asked households how many pets they own: 0 pets (6 households), 1 pet (12), 2 pets (8), 3 pets (4). How many households were surveyed in total?',
+        options: ['26', '28', '30', '32'], answer: '30',
+        hint: 'Add all frequency counts together.',
+        explanation: 'Total sample = 6 + 12 + 8 + 4 = 30 households.'
+      },
+      {
+        id: 'e8', level: 'easy', topic: 'Interpreting Statistical Data',
+        question: 'When an unusually large high number (outlier) is added to a dataset, which measure is pulled upward the most?',
+        options: ['Median', 'Mode', 'Mean', 'IQR'], answer: 'Mean',
+        hint: 'Which measure depends directly on the exact numerical sum of all items?',
+        explanation: 'The mean includes all numbers in its calculation, making it sensitive to extreme values.'
+      },
+      {
+        id: 'e9', level: 'easy', topic: 'Mean, Median and Mode',
+        question: 'Calculate the median of the six numbers: 42, 38, 55, 60, 48, 50.',
+        options: ['48.5', '49.0', '49.5', '50.0'], answer: '49.0',
+        hint: 'Sort the list: 38, 42, 48, 50, 55, 60. Then average the two center numbers.',
+        explanation: 'The middle two numbers are 48 and 50. Median = (48 + 50) / 2 = 49.0.'
+      },
+      {
+        id: 'e10', level: 'easy', topic: 'Data Representation',
+        question: 'Which graphical display is most appropriate for tracking changes in a continuous metric over time?',
+        options: ['Pie Chart', 'Bar Chart', 'Line Graph', 'Venn Diagram'], answer: 'Line Graph',
+        hint: 'Think about connected points across a timeline.',
+        explanation: 'Line graphs connect observations chronologically, illustrating trends over time.'
+      },
+
+      // MEDIUM (11 - 20)
+      {
+        id: 'm1', level: 'medium', topic: 'Frequency Tables',
+        question: 'Goals per match across 20 matches: 0 goals (5 matches), 1 goal (7 matches), 2 goals (6 matches), 3 goals (2 matches). What is the mean number of goals?',
+        options: ['1.15', '1.25', '1.30', '1.40'], answer: '1.25',
+        hint: 'Multiply each goal count by its frequency, sum them, then divide by 20.',
+        explanation: 'Total goals = (0×5) + (1×7) + (2×6) + (3×2) = 25. Mean = 25 / 20 = 1.25.'
+      },
+      {
+        id: 'm2', level: 'medium', topic: 'Mean, Median and Mode',
+        question: 'A student scored 78, 85, 92, and 81 on their first four exams. What score is needed on the 5th exam to achieve an overall mean of 84?',
+        options: ['82', '84', '86', '88'], answer: '84',
+        hint: 'Total needed for 5 exams is 5 × 84 = 420. Subtract the first four scores.',
+        explanation: 'Current sum = 336. Score needed = 420 - 336 = 84.'
+      },
+      {
+        id: 'm3', level: 'medium', topic: 'Pie Charts',
+        question: 'A company budget of $180,000 is shown in a pie chart. If the R&D sector has a central angle of 72°, what amount is allocated to R&D?',
+        options: ['$32,000', '$36,000', '$40,000', '$45,000'], answer: '$36,000',
+        hint: 'Calculate (72 / 360) and multiply by $180,000.',
+        explanation: '(72 / 360) = 0.20 (20%). 0.20 × $180,000 = $36,000.'
+      },
+      {
+        id: 'm4', level: 'medium', topic: 'Bar Charts',
+        question: 'Q2 sales rose from $80,000 in 2024 to $100,000 in 2025. What is the percentage increase in sales?',
+        options: ['20%', '25%', '28%', '30%'], answer: '25%',
+        hint: 'Percentage change = ((New - Old) / Old) × 100%.',
+        explanation: '((100,000 - 80,000) / 80,000) × 100% = 20,000 / 80,000 = 25%.'
+      },
+      {
+        id: 'm5', level: 'medium', topic: 'Frequency Tables',
+        question: 'Cumulative study hours of 50 students: 1–5 hrs (8), 6–10 hrs (22), 11–15 hrs (41), 16–20 hrs (50). In which interval does the median lie?',
+        options: ['1–5 hours', '6–10 hours', '11–15 hours', '16–20 hours'], answer: '11–15 hours',
+        hint: 'Median position is 50 / 2 = 25. Check where cumulative frequency crosses 25.',
+        explanation: 'Cumulative frequency passes 25 during the 11–15 interval (jumps from 22 to 41).'
+      },
+      {
+        id: 'm6', level: 'medium', topic: 'Interpreting Statistical Data',
+        question: 'A dataset has a mean of 50 and a range of 20. If every value is multiplied by 3 and increased by 5, what are the new mean and range?',
+        options: ['Mean = 155, Range = 65', 'Mean = 155, Range = 60', 'Mean = 150, Range = 60', 'Mean = 150, Range = 65'],
+        answer: 'Mean = 155, Range = 60',
+        hint: 'Mean changes by both multiplying and adding. Range (spread) only changes by multiplying.',
+        explanation: 'New mean = 3(50) + 5 = 155. New range = 3 × 20 = 60.'
+      },
+      {
+        id: 'm7', level: 'medium', topic: 'Data Representation',
+        question: 'Grouped data midpoints m and frequencies f: Midpoint 5 (f = 4), Midpoint 15 (f = 6), Midpoint 25 (f = 10). What is the estimated mean?',
+        options: ['16.5', '17.5', '18.0', '19.0'], answer: '18.0',
+        hint: 'Sum of (f × m) divided by total frequency (20).',
+        explanation: 'Sum = (4×5) + (6×15) + (10×25) = 20 + 90 + 250 = 360. Mean = 360 / 20 = 18.0.'
+      },
+      {
+        id: 'm8', level: 'medium', topic: 'Range',
+        question: 'Consider the ordered numbers: 10, 12, 14, 15, 18, 20, 22, 25, 28. What is the Interquartile Range (IQR)?',
+        options: ['9.5', '10.5', '11.5', '12.0'], answer: '10.5',
+        hint: 'Median is 18. Find Q1 (median of lower half) and Q3 (upper half), then Q3 - Q1.',
+        explanation: 'Lower half = {10, 12, 14, 15} → Q1 = 13. Upper half = {20, 22, 25, 28} → Q3 = 23.5. IQR = 23.5 - 13 = 10.5.'
+      },
+      {
+        id: 'm9', level: 'medium', topic: 'Interpreting Statistical Data',
+        question: 'In a salary distribution, Mean = $68,000, Median = $54,000, and Mode = $48,000. What is the shape of this distribution?',
+        options: ['Symmetrical', 'Negatively skewed', 'Positively skewed (right-skewed)', 'Uniform'],
+        answer: 'Positively skewed (right-skewed)',
+        hint: 'When the mean is pulled above the median and mode, which tail is longer?',
+        explanation: 'Mean > Median > Mode indicates a right-skewed (positively skewed) distribution.'
+      },
+      {
+        id: 'm10', level: 'medium', topic: 'Data Representation',
+        question: 'In a sample of 100 students, 45 undergraduates and 35 graduates own laptops. What percentage of all 100 students own laptops?',
+        options: ['75%', '80%', '82%', '85%'], answer: '80%',
+        hint: 'Add all laptop owners, then divide by the total student count.',
+        explanation: 'Total laptop owners = 45 + 35 = 80. Out of 100, this equals 80%.'
+      },
+
+      // HARD (21 - 30)
+      {
+        id: 'h1', level: 'hard', topic: 'Variance',
+        question: 'Calculate the sample variance (s²) for the dataset: 4, 6, 9, 13.',
+        options: ['11.50', '13.67', '15.33', '17.25'], answer: '15.33',
+        hint: 'Mean = 8. Sum squared deviations, then divide by n - 1 = 3.',
+        explanation: 'Deviations: (-4)² + (-2)² + (1)² + (5)² = 16 + 4 + 1 + 25 = 46. s² = 46 / 3 ≈ 15.33.'
+      },
+      {
+        id: 'h2', level: 'hard', topic: 'Standard Deviation',
+        question: 'A small population consists of five numbers: 2, 4, 6, 8, 10. What is the population standard deviation (σ)?',
+        options: ['2.00', '2.83', '3.16', '8.00'], answer: '2.83',
+        hint: 'Mean = 6. Population variance σ² = sum of squared deviations / 5 = 8. Take square root.',
+        explanation: 'Squared deviations sum to 40. σ² = 40 / 5 = 8. σ = √8 ≈ 2.83.'
+      },
+      {
+        id: 'h3', level: 'hard', topic: 'Standard Deviation',
+        question: 'Sample standard deviation is s = 6.4. If every value is multiplied by 2.5 and then 10 is added, what is the new standard deviation?',
+        options: ['16.0', '26.0', '18.5', '22.0'], answer: '16.0',
+        hint: 'Standard deviation scales only by the multiplicative factor |a|.',
+        explanation: 'New standard deviation = 2.5 × 6.4 = 16.0. Adding 10 does not change spread.'
+      },
+      {
+        id: 'h4', level: 'hard', topic: 'Interpreting Statistical Data',
+        question: 'Machine 1 rods have mean diameter 10.0 mm (SD 0.15 mm). Machine 2 rods have mean 10.0 mm (SD 0.04 mm). Which statement is valid?',
+        options: [
+          'Machine 1 is more consistent because standard deviation is higher.',
+          'Machine 2 produces rods with less variability and tighter precision around the mean.',
+          'Both machines produce identical parts because their means match.',
+          'Machine 2 rods deviate further from the mean on average.'
+        ],
+        answer: 'Machine 2 produces rods with less variability and tighter precision around the mean.',
+        hint: 'Smaller standard deviation indicates values cluster tighter around the center.',
+        explanation: 'Lower standard deviation represents tighter grouping and less process variability.'
+      },
+      {
+        id: 'h5', level: 'hard', topic: 'Standard Deviation',
+        question: 'Normally distributed scores have mean μ = 75 and σ = 8. By the Empirical Rule, what percentage of scores fall between 59 and 91?',
+        options: ['68%', '90%', '95%', '99.7%'], answer: '95%',
+        hint: 'Notice 59 is μ - 2σ and 91 is μ + 2σ.',
+        explanation: 'The Empirical Rule dictates that ~95% of observations fall within 2 standard deviations.'
+      },
+      {
+        id: 'h6', level: 'hard', topic: 'Interpreting Statistical Data',
+        question: 'Stock A: mean return 12%, SD 3%. Stock B: mean return 25%, SD 5%. Which stock has lower relative risk (Coefficient of Variation)?',
+        options: [
+          'Stock A, because its absolute standard deviation is lower (3%).',
+          'Stock B, because its coefficient of variation is 20% compared to 25% for Stock A.',
+          'Both stocks have identical relative risk.',
+          'Stock A, because its coefficient of variation is 15%.'
+        ],
+        answer: 'Stock B, because its coefficient of variation is 20% compared to 25% for Stock A.',
+        hint: 'CV = Standard Deviation / Mean.',
+        explanation: 'CV_A = 3/12 = 25%. CV_B = 5/25 = 20%. Stock B has lower relative dispersion per unit of return.'
+      },
+      {
+        id: 'h7', level: 'hard', topic: 'Variance',
+        question: 'Values x with frequencies f: x = 2 (f = 2), x = 5 (f = 6), x = 8 (f = 2). Total observations N = 10. What is the population variance (σ²)?',
+        options: ['2.4', '3.6', '4.2', '6.0'], answer: '3.6',
+        hint: 'Mean = 5. Calculate sum of f(x - 5)², then divide by 10.',
+        explanation: 'Sum = 2(2-5)² + 6(5-5)² + 2(8-5)² = 18 + 0 + 18 = 36. σ² = 36 / 10 = 3.6.'
+      },
+      {
+        id: 'h8', level: 'hard', topic: 'Standard Deviation',
+        question: 'A population has σ = 20. A random sample of n = 100 observations is taken. What is the standard error of the mean (σ_x̄)?',
+        options: ['0.20', '2.00', '4.00', '10.00'], answer: '2.00',
+        hint: 'Standard error = σ / √n.',
+        explanation: 'SE = 20 / √100 = 20 / 10 = 2.00.'
+      },
+      {
+        id: 'h9', level: 'hard', topic: 'Variance',
+        question: 'For a sample of n = 10, Σx = 120 and Σx² = 1530. What is the sample variance (s²)?',
+        options: ['8.5', '9.0', '10.0', '12.0'], answer: '10.0',
+        hint: 'SS = Σx² - ((Σx)² / n). Then divide SS by (n - 1).',
+        explanation: 'SS = 1530 - (14400 / 10) = 1530 - 1440 = 90. s² = 90 / 9 = 10.0.'
+      },
+      {
+        id: 'h10', level: 'hard', topic: 'Interpreting Statistical Data',
+        question: 'A dataset has nine identical values of 50 and one outlier of 500. What happens to the standard deviation if 500 is deleted?',
+        options: [
+          'It drops to exactly 0.',
+          'It remains unchanged.',
+          'It increases slightly.',
+          'It decreases by 10%.'
+        ],
+        answer: 'It drops to exactly 0.',
+        hint: 'If all remaining numbers are identical (50), how much variation exists?',
+        explanation: 'When all items are identical, variation is zero, so standard deviation is 0.'
+      }
+    ];
+
+    /* ----------------------------------------------------------
+       STATE & STORAGE
+       ---------------------------------------------------------- */
+    let questionsDB = [];
+    let currentQuizMode = 'standard'; // 'standard' | 'practice'
+    let currentLevel = 'easy';
+    let activeQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let selectedOptionIndex = null;
+    let hasAnswered = false;
+    let quizStartTime = null;
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let userReviewLog = [];
+
+    // Initialize Questions from localStorage or Default
+    function loadQuestions() {
+      const stored = localStorage.getItem('statquiz_questions_v2');
+      if (stored) {
+        try { questionsDB = JSON.parse(stored); } catch (e) { questionsDB = [...DEFAULT_QUESTIONS]; }
+      } else {
+        questionsDB = [...DEFAULT_QUESTIONS];
+        saveQuestionsToStorage();
+      }
+      updateQuestionCounts();
+    }
+
+    function saveQuestionsToStorage() {
+      localStorage.setItem('statquiz_questions_v2', JSON.stringify(questionsDB));
+      updateQuestionCounts();
+    }
+
+    function updateQuestionCounts() {
+      const easyC = questionsDB.filter(q => q.level === 'easy').length;
+      const medC = questionsDB.filter(q => q.level === 'medium').length;
+      const hardC = questionsDB.filter(q => q.level === 'hard').length;
+
+      document.getElementById('easyStats').textContent = `${easyC} Questions`;
+      document.getElementById('medStats').textContent = `${medC} Questions`;
+      document.getElementById('hardStats').textContent = `${hardC} Questions`;
+
+      document.getElementById('countAll').textContent = questionsDB.length;
+      document.getElementById('countEasy').textContent = easyC;
+      document.getElementById('countMed').textContent = medC;
+      document.getElementById('countHard').textContent = hardC;
+      updateBestScoreDisplay();
+    }
+
+    /* ----------------------------------------------------------
+       THEME MANAGEMENT (DARK / LIGHT)
+       ---------------------------------------------------------- */
+    function initTheme() {
+      const savedTheme = localStorage.getItem('statquiz_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('statquiz_theme', next);
+      updateThemeIcon(next);
+    }
+
+    function updateThemeIcon(theme) {
+      document.getElementById('btnTheme').textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+
+    /* ----------------------------------------------------------
+       NAVIGATION
+       ---------------------------------------------------------- */
+    function switchView(viewName) {
+      clearInterval(timerInterval);
+      document.getElementById('startView').style.display = 'none';
+      document.getElementById('quizView').style.display = 'none';
+      document.getElementById('resultsView').style.display = 'none';
+      document.getElementById('learnView').style.display = 'none';
+      document.getElementById('manageView').style.display = 'none';
+      document.getElementById('historyView').style.display = 'none';
+
+      document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('active'));
+
+      if (viewName === 'start') {
+        document.getElementById('startView').style.display = 'block';
+        updateBestScoreDisplay();
+      } else if (viewName === 'learn') {
+        document.getElementById('learnView').style.display = 'block';
+        document.getElementById('navLearn').classList.add('active');
+      } else if (viewName === 'manage') {
+        document.getElementById('manageView').style.display = 'block';
+        document.getElementById('navManage').classList.add('active');
+        renderQuestionManagementList('all');
+      } else if (viewName === 'history') {
+        document.getElementById('historyView').style.display = 'block';
+        document.getElementById('navHistory').classList.add('active');
+        renderHistoryTable();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ----------------------------------------------------------
+       START SCREEN CONFIG
+       ---------------------------------------------------------- */
+    function selectQuizMode(mode) {
+      currentQuizMode = mode;
+      document.getElementById('modeStandard').classList.toggle('selected', mode === 'standard');
+      document.getElementById('modePractice').classList.toggle('selected', mode === 'practice');
+    }
+
+    function selectDifficulty(level) {
+      currentLevel = level;
+      document.querySelectorAll('.diff-card').forEach(card => {
+        card.classList.toggle('selected', card.getAttribute('data-level') === level);
+      });
+      updateBestScoreDisplay();
+    }
+
+    function updateBestScoreDisplay() {
+      const bestScores = JSON.parse(localStorage.getItem('statquiz_best') || '{}');
+      const val = bestScores[currentLevel];
+      const lbl = document.getElementById('bestScoreLabel');
+      if (val !== undefined) {
+        lbl.textContent = `Best (${currentLevel.toUpperCase()}): ${val}%`;
+      } else {
+        lbl.textContent = `Best: None yet`;
+      }
+    }
+
+    /* ----------------------------------------------------------
+       START / RUN QUIZ
+       ---------------------------------------------------------- */
+    function startQuiz() {
+      let filtered = questionsDB.filter(q => q.level === currentLevel);
+
+      if (filtered.length === 0) {
+        alert('No questions available in this level. Please add questions or reset to defaults in Question Manager.');
+        return;
+      }
+
+      // Settings
+      const countVal = document.getElementById('settingCount').value;
+      const shuffleVal = document.getElementById('settingShuffle').value === 'true';
+
+      let pool = [...filtered];
+      if (shuffleVal) pool.sort(() => Math.random() - 0.5);
+
+      const targetCount = countVal === 'all' ? pool.length : Math.min(parseInt(countVal), pool.length);
+      activeQuestions = pool.slice(0, targetCount).map(q => {
+        const shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
+        return { ...q, options: shuffledOpts, correctAnswerText: q.answer };
+      });
+
+      currentIndex = 0;
+      score = 0;
+      userReviewLog = [];
+      quizStartTime = new Date();
+
+      // UI View
+      document.getElementById('startView').style.display = 'none';
+      document.getElementById('resultsView').style.display = 'none';
+      document.getElementById('quizView').style.display = 'block';
+
+      // Practice vs Standard setup
+      document.getElementById('qBadgeLevel').textContent = currentLevel.toUpperCase();
+      document.getElementById('qBadgeLevel').className = `q-pill ${currentLevel}`;
+      document.getElementById('qBadgePractice').style.display = currentQuizMode === 'practice' ? 'inline-block' : 'none';
+
+      loadCurrentQuestion();
+    }
+
+    function restartQuiz() {
+      startQuiz();
+    }
+
+    /* ----------------------------------------------------------
+       LOAD INDIVIDUAL QUESTION
+       ---------------------------------------------------------- */
+    function loadCurrentQuestion() {
+      clearInterval(timerInterval);
+      const q = activeQuestions[currentIndex];
+      selectedOptionIndex = null;
+      hasAnswered = false;
+
+      // Meta & Progress
+      document.getElementById('qProgressText').textContent = `Question ${currentIndex + 1} of ${activeQuestions.length}`;
+      document.getElementById('qScoreDisplay').textContent = `Score: ${score}`;
+      const pct = (currentIndex / activeQuestions.length) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+
+      document.getElementById('qTopic').textContent = `Topic: ${q.topic}`;
+      document.getElementById('qText').textContent = q.question;
+
+      // Reset Boxes
+      document.getElementById('hintBox').style.display = 'none';
+      document.getElementById('mistakeBox').style.display = 'none';
+      document.getElementById('explanationBox').style.display = 'none';
+      document.getElementById('btnRetry').style.display = 'none';
+      document.getElementById('btnNext').style.display = 'none';
+      document.getElementById('btnCheck').style.display = 'inline-flex';
+      document.getElementById('btnCheck').disabled = true;
+
+      // Practice Hint Button
+      const btnHint = document.getElementById('btnHint');
+      if (currentQuizMode === 'practice' && q.hint) {
+        btnHint.style.display = 'inline-flex';
+        btnHint.disabled = false;
+      } else {
+        btnHint.style.display = 'none';
+      }
+
+      // Render Options
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.type = 'button';
+        btn.onclick = () => selectOption(idx);
+        btn.innerHTML = `
+          <div class="option-prefix">${letters[idx]}</div>
+          <span class="option-text">${opt}</span>
+        `;
+        container.appendChild(btn);
+      });
+
+      // Timer Setup (if enabled)
+      setupQuestionTimer();
+    }
+
+    function setupQuestionTimer() {
+      const timerVal = parseInt(document.getElementById('settingTimer').value);
+      const timerDisplay = document.getElementById('timerDisplay');
+      const timerText = document.getElementById('timerText');
+
+      if (currentQuizMode === 'practice' || timerVal === 0) {
+        timerDisplay.style.display = 'none';
+        return;
+      }
+
+      timerDisplay.style.display = 'inline-flex';
+      timerDisplay.classList.remove('urgent');
+
+      if (timerVal === 180) {
+        // Total Quiz Timer
+        if (currentIndex === 0) timeRemaining = 180;
+      } else {
+        // Per-Question Timer
+        timeRemaining = timerVal;
+      }
+
+      updateTimerUI(timeRemaining);
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerUI(timeRemaining);
+        if (timeRemaining <= 10) timerDisplay.classList.add('urgent');
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          autoSubmitOnTimeUp();
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      document.getElementById('timerText').textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    function autoSubmitOnTimeUp() {
+      if (!hasAnswered) {
+        // Automatically check with empty answer or first selected
+        checkAnswer(true);
+      }
+    }
+
+    /* ----------------------------------------------------------
+       SELECTION & HINTS
+       ---------------------------------------------------------- */
+    function selectOption(index) {
+      if (hasAnswered) return;
+      selectedOptionIndex = index;
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach((b, i) => b.classList.toggle('selected', i === index));
+      document.getElementById('btnCheck').disabled = false;
+    }
+
+    function showHint() {
+      const q = activeQuestions[currentIndex];
+      const box = document.getElementById('hintBox');
+      box.textContent = `💡 Hint: ${q.hint || 'Review the formulas for this topic.'}`;
+      box.style.display = 'block';
+      document.getElementById('btnHint').disabled = true;
+    }
+
+    function retryQuestion() {
+      hasAnswered = false;
+      selectedOptionIndex = null;
+      document.getElementById('mistakeBox').style.display = 'none';
+      document.getElementById('explanationBox').style.display = 'none';
+      document.getElementById('btnRetry').style.display = 'none';
+      document.getElementById('btnNext').style.display = 'none';
+      document.getElementById('btnCheck').style.display = 'inline-flex';
+      document.getElementById('btnCheck').disabled = true;
+
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach(b => {
+        b.disabled = false;
+        b.className = 'option-btn';
+      });
+    }
+
+    /* ----------------------------------------------------------
+       CHECK ANSWER & DIAGNOSTICS
+       ---------------------------------------------------------- */
+    function checkAnswer(timedOut = false) {
+      if (hasAnswered) return;
+      clearInterval(timerInterval);
+      hasAnswered = true;
+
+      const q = activeQuestions[currentIndex];
+      const buttons = document.querySelectorAll('.option-btn');
+      const chosenText = selectedOptionIndex !== null ? q.options[selectedOptionIndex] : 'No answer submitted (Timed Out)';
+      const isCorrect = chosenText === q.correctAnswerText;
+
+      if (isCorrect) score++;
+
+      // Log for review
+      userReviewLog.push({
+        num: currentIndex + 1,
+        topic: q.topic,
+        question: q.question,
+        userAnswer: chosenText,
+        correctAnswer: q.correctAnswerText,
+        isCorrect: isCorrect,
+        explanation: q.explanation
+      });
+
+      // Highlight options
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        const text = q.options[idx];
+        if (text === q.correctAnswerText) {
+          btn.classList.add('correct');
+        } else if (idx === selectedOptionIndex && !isCorrect) {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      // Show Explanation
+      document.getElementById('explanationText').textContent = q.explanation;
+      document.getElementById('explanationBox').style.display = 'block';
+
+      // Practice Mode: Mistake diagnosis & Retry option
+      if (currentQuizMode === 'practice' && !isCorrect) {
+        const mistakeBox = document.getElementById('mistakeBox');
+        mistakeBox.textContent = `🔍 Common Statistical Pitfall: Make sure you double-check whether to use (n - 1) versus n, or whether the dataset needed sorting beforehand.`;
+        mistakeBox.style.display = 'block';
+        document.getElementById('btnRetry').style.display = 'inline-flex';
+      }
+
+      document.getElementById('qScoreDisplay').textContent = `Score: ${score}`;
+      document.getElementById('btnCheck').style.display = 'none';
+      document.getElementById('btnNext').style.display = 'inline-flex';
+
+      if (currentIndex === activeQuestions.length - 1) {
+        document.getElementById('btnNext').textContent = 'View Final Results 🎉';
+      } else {
+        document.getElementById('btnNext').textContent = 'Next Question →';
+      }
+    }
+
+    function nextQuestion() {
+      if (currentIndex < activeQuestions.length - 1) {
+        currentIndex++;
+        loadCurrentQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    /* ----------------------------------------------------------
+       RESULTS SCREEN & HISTORY RECORDING
+       ---------------------------------------------------------- */
+    function showResults() {
+      document.getElementById('quizView').style.display = 'none';
+      document.getElementById('resultsView').style.display = 'block';
+
+      const total = activeQuestions.length;
+      const pct = Math.round((score / total) * 100);
+
+      document.getElementById('resPercent').textContent = `${pct}%`;
+      document.getElementById('resCorrect').textContent = score;
+      document.getElementById('resIncorrect').textContent = total - score;
+
+      // Time taken
+      const durationSec = Math.round((new Date() - quizStartTime) / 1000);
+      const mins = Math.floor(durationSec / 60);
+      const secs = durationSec % 60;
+      const timeStr = `${mins}m ${secs}s`;
+      document.getElementById('resTime').textContent = timeStr;
+
+      // Save Best Score
+      const bestScores = JSON.parse(localStorage.getItem('statquiz_best') || '{}');
+      const prevBest = bestScores[currentLevel] || 0;
+      const newBest = Math.max(prevBest, pct);
+      bestScores[currentLevel] = newBest;
+      localStorage.setItem('statquiz_best', JSON.stringify(bestScores));
+      document.getElementById('resBest').textContent = `${newBest}%`;
+
+      // Save Quiz Attempt to History
+      const historyLog = JSON.parse(localStorage.getItem('statquiz_history') || '[]');
+      historyLog.unshift({
+        date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        level: currentLevel.toUpperCase(),
+        mode: currentQuizMode === 'practice' ? 'Practice' : 'Standard',
+        score: `${score}/${total}`,
+        percentage: `${pct}%`,
+        duration: timeStr
+      });
+      localStorage.setItem('statquiz_history', JSON.stringify(historyLog.slice(0, 50)));
+
+      // Motivational Message
+      const titleEl = document.getElementById('resTitle');
+      const descEl = document.getElementById('resDesc');
+      if (pct >= 90) {
+        titleEl.textContent = 'Statistical Mastermind! 🏆';
+        descEl.textContent = 'Outstanding accuracy! You have a rigorous mathematical grasp of data and dispersion.';
+      } else if (pct >= 70) {
+        titleEl.textContent = 'Great Job! 📈';
+        descEl.textContent = 'Strong statistical competency. Keep reviewing explanations for continuous improvement.';
+      } else {
+        titleEl.textContent = 'Good Effort! Keep Practicing 💪';
+        descEl.textContent = 'Statistics becomes second nature with practice. Review your detailed question logs below.';
+      }
+
+      renderReviewBreakdown();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleReview() {
+      const wrap = document.getElementById('reviewWrapper');
+      wrap.classList.toggle('show');
+      if (wrap.classList.contains('show')) wrap.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderReviewBreakdown() {
+      const container = document.getElementById('reviewContainer');
+      container.innerHTML = '';
+      userReviewLog.forEach(item => {
+        const div = document.createElement('div');
+        div.className = `review-item ${item.isCorrect ? 'correct' : 'incorrect'}`;
+        div.innerHTML = `
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">
+            <span>Q${item.num} • ${item.topic}</span>
+            <span style="color: ${item.isCorrect ? 'var(--easy-color)' : 'var(--hard-color)'}">
+              ${item.isCorrect ? '✓ Correct' : '✕ Incorrect'}
+            </span>
+          </div>
+          <div style="font-weight: 700; margin-bottom: 0.5rem;">${item.question}</div>
+          <div style="font-size: 0.85rem; margin-bottom: 0.35rem;">
+            <strong>Your Answer:</strong> <span style="color: ${item.isCorrect ? 'var(--easy-color)' : 'var(--hard-color)'}">${item.userAnswer}</span>
+          </div>
+          <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">
+            <strong>Correct Answer:</strong> <span style="color: var(--easy-color)">${item.correctAnswer}</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-muted); border-top: 1px dashed var(--item-border); padding-top: 0.4rem;">
+            <strong>Solution Note:</strong> ${item.explanation}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    /* ----------------------------------------------------------
+       QUESTION MANAGEMENT
+       ---------------------------------------------------------- */
+    let currentQMFilter = 'all';
+
+    function filterQuestionList(filter) {
+      currentQMFilter = filter;
+      document.querySelectorAll('.qm-filters .btn-nav').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase().includes(filter));
+      });
+      renderQuestionManagementList(filter);
+    }
+
+    function renderQuestionManagementList(filter) {
+      const list = document.getElementById('qmQuestionsList');
+      list.innerHTML = '';
+
+      const items = filter === 'all' ? questionsDB : questionsDB.filter(q => q.level === filter);
+
+      if (items.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No questions found in this category.</p>';
+        return;
+      }
+
+      items.forEach(q => {
+        const item = document.createElement('div');
+        item.className = 'qm-item';
+        item.innerHTML = `
+          <div class="qm-item-info">
+            <span class="q-pill ${q.level}">${q.level.toUpperCase()}</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.4rem;">${q.topic}</span>
+            <div class="qm-item-q">${q.question}</div>
+            <div class="qm-item-ans">Answer: <strong>${q.answer}</strong></div>
+          </div>
+          <div class="qm-item-actions">
+            <button class="btn-icon-action" onclick="editQuestion('${q.id}')">Edit</button>
+            <button class="btn-icon-action delete" onclick="deleteQuestion('${q.id}')">Delete</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function openQuestionModal(editData = null) {
+      const modal = document.getElementById('questionModal');
+      const form = document.getElementById('questionForm');
+      form.reset();
+
+      if (editData) {
+        document.getElementById('modalTitle').textContent = 'Edit Question';
+        document.getElementById('formQId').value = editData.id;
+        document.getElementById('formQLevel').value = editData.level;
+        document.getElementById('formQTopic').value = editData.topic;
+        document.getElementById('formQText').value = editData.question;
+        document.getElementById('formOptA').value = editData.options[0];
+        document.getElementById('formOptB').value = editData.options[1];
+        document.getElementById('formOptC').value = editData.options[2];
+        document.getElementById('formOptD').value = editData.options[3];
+        
+        const correctIdx = editData.options.indexOf(editData.answer);
+        document.getElementById('formCorrectOption').value = correctIdx !== -1 ? correctIdx : 0;
+        document.getElementById('formQHint').value = editData.hint || '';
+        document.getElementById('formQExplanation').value = editData.explanation;
+      } else {
+        document.getElementById('modalTitle').textContent = 'Add New Question';
+        document.getElementById('formQId').value = '';
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeQuestionModal() {
+      document.getElementById('questionModal').style.display = 'none';
+    }
+
+    function saveQuestion(e) {
+      e.preventDefault();
+      const id = document.getElementById('formQId').value || 'q_' + Date.now();
+      const level = document.getElementById('formQLevel').value;
+      const topic = document.getElementById('formQTopic').value.trim();
+      const question = document.getElementById('formQText').value.trim();
+      const opts = [
+        document.getElementById('formOptA').value.trim(),
+        document.getElementById('formOptB').value.trim(),
+        document.getElementById('formOptC').value.trim(),
+        document.getElementById('formOptD').value.trim()
+      ];
+      const correctIdx = parseInt(document.getElementById('formCorrectOption').value);
+      const answer = opts[correctIdx];
+      const hint = document.getElementById('formQHint').value.trim();
+      const explanation = document.getElementById('formQExplanation').value.trim();
+
+      const newQ = { id, level, topic, question, options: opts, answer, hint, explanation };
+
+      const existingIdx = questionsDB.findIndex(q => q.id === id);
+      if (existingIdx !== -1) {
+        questionsDB[existingIdx] = newQ;
+      } else {
+        questionsDB.unshift(newQ);
+      }
+
+      saveQuestionsToStorage();
+      closeQuestionModal();
+      renderQuestionManagementList(currentQMFilter);
+    }
+
+    function editQuestion(id) {
+      const q = questionsDB.find(item => item.id === id);
+      if (q) openQuestionModal(q);
+    }
+
+    function deleteQuestion(id) {
+      if (confirm('Are you sure you want to delete this question?')) {
+        questionsDB = questionsDB.filter(q => q.id !== id);
+        saveQuestionsToStorage();
+        renderQuestionManagementList(currentQMFilter);
+      }
+    }
+
+    function resetToDefaultQuestions() {
+      if (confirm('Reset question bank back to original 30 verified questions? (Custom additions will be restored)')) {
+        questionsDB = [...DEFAULT_QUESTIONS];
+        saveQuestionsToStorage();
+        renderQuestionManagementList('all');
+      }
+    }
+
+    /* ----------------------------------------------------------
+       HISTORY VIEW
+       ---------------------------------------------------------- */
+    function renderHistoryTable() {
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = '';
+      const historyLog = JSON.parse(localStorage.getItem('statquiz_history') || '[]');
+
+      if (historyLog.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem; color:var(--text-muted)">No quiz history recorded yet. Complete a quiz to view past results!</td></tr>';
+        return;
+      }
+
+      historyLog.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.date}</td>
+          <td><span class="q-pill ${row.level.toLowerCase()}">${row.level}</span></td>
+          <td>${row.mode}</td>
+          <td><strong>${row.score}</strong></td>
+          <td>${row.percentage}</td>
+          <td>${row.duration}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function clearQuizHistory() {
+      if (confirm('Are you sure you want to clear your entire quiz history?')) {
+        localStorage.removeItem('statquiz_history');
+        renderHistoryTable();
+      }
+    }
+
+    /* ----------------------------------------------------------
+       INITIALIZATION
+       ---------------------------------------------------------- */
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      loadQuestions();
+    });
+  </script>
+</body>
+</html>
